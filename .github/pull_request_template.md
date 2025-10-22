@@ -46,7 +46,7 @@ Please check the type of change that best describes your PR.
 
 **If YES, please describe the breaking change and its impact below:**
 <!--
-A BREAKING CHANGE must have a `!` after the type/scope in the PR title (e.S., `feat(api)!: ...`)
+A BREAKING CHANGE must have a `!` after the type/scope in the PR title (e.g., `feat(api)!: ...`)
 AND a footer starting with `BREAKING CHANGE:`.
 Example:
 BREAKING CHANGE: The `userId` field is no longer returned in the `/users` endpoint.
