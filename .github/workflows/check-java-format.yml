@@ -1,0 +1,25 @@
+name: Spotless Check
+
+on:
+  pull_request:
+    branches: [ "development" ]
+
+jobs:
+  spotless_check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run spotless check
+        run: ./gradlew spotlessCheck
