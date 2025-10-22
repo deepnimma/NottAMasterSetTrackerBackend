@@ -1,18 +1,75 @@
 plugins {
     id 'java'
+    id 'com.diffplug.spotless' version '6.25.0'
+}
+
+def getGitTag() {
+    try {
+        // Create a process to run the git command
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--abbrev=0'
+            standardOutput = stdout
+            // Don't fail the build if git isn't available or there are no tags
+            ignoreExitValue = true
+        }
+        def tag = stdout.toString().trim()
+        // Return the tag if it's not empty, otherwise return null
+        return tag.isEmpty() ? null : tag
+    } catch (Exception e) {
+        // Log if git command fails (e.g., git not installed)
+        println "Could not get git tag: " + e.getMessage()
+        return null
+    }
 }
 
 group = 'com.deepnimma'
-version = '1.0-SNAPSHOT'
+version = getGitTag() ?: 'v1.0-DEFAULT'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    def lombokVersion = "1.18.42"
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    // Testing
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Testing Lombok
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+}
+
+spotless {
+    java {
+        target 'src/*/java/**/*.java'
+
+        palantirJavaFormat('2.81.0')
+            .style("AOSP")
+
+        formatAnnotations()
+        removeUnusedImports()
+        importOrder(
+                "java",
+                "javax",
+                "",
+                "com",
+                "org",
+                "",
+                "\\#"
+        )
+    }
+}
+
+tasks.named("check") {
+    dependsOn(tasks.named("spotlessApply"))
 }
 
 test {
