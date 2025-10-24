@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.diffplug.spotless' version '6.25.0'
+    id 'org.graalvm.buildtools.native' version '0.11.1'
 }
 
 def getGitTag() {
@@ -26,16 +27,35 @@ def getGitTag() {
 group = 'com.deepnimma'
 version = getGitTag() ?: 'v1.0-DEFAULT'
 
+graalvmNative {
+    binaries {
+        main {
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion = JavaLanguageVersion.of(21)
+                vendor = JvmVendorSpec.matching("Oracle Corporation")
+            }
+
+            imageName = "imageCourier"
+            mainClass = 'com.deepnimma.Main'
+            richOutput = true
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     def lombokVersion = "1.18.42"
+    def graalVmVersion = "0.11.1"
 
     // Lombok
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    // GraalVM
+
 
     // Testing
     testImplementation platform('org.junit:junit-bom:5.10.0')
