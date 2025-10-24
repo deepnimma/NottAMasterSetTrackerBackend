@@ -1,6 +1,3 @@
-provider "cloudflare" {
-  api_token = var.cloudflare_api_token
-}
 
 module "image_r2_bucket" {
   source = "./modules/r2-bucket"
