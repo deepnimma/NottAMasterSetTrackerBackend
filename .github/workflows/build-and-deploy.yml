@@ -82,3 +82,4 @@ jobs:
           terraform init
           terraform workspace select -or-create development
           terraform plan 
+          terraform apply -auto-approve
