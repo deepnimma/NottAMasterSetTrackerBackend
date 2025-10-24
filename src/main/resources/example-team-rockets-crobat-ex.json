@@ -1,0 +1,18 @@
+{
+  "cardTitle": "Team Rocket's Crobat EX",
+  "trainerInfo": {
+    "item": false,
+    "trainerOwned": true,
+    "soleTrainer": false,
+    "trainer": "Team Rocket"
+  },
+  "hasReverseHolo": false,
+  "mainEnergy": "dark",
+  "secondaryEnergy": null,
+  "illustrator": "cochi8i",
+  "masterSetData": {
+    "setName": "Destined Rivals",
+    "cardNumber": 234
+  },
+  "tags": [ "secretIllustrationRare" ]
+}
