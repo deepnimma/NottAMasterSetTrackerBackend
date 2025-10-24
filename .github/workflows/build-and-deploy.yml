@@ -75,8 +75,8 @@ jobs:
       - name: Run Terraform Plan
         working-directory: ./infrastructure
         env:
-          cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           # This passes the JAR file path to Terraform as an input variable
           TF_VAR_java_jar_path: ../artifact/${{ needs.build.outputs.jar_name }}
         run: |
