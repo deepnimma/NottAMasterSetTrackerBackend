@@ -81,6 +81,5 @@ jobs:
           TF_VAR_java_jar_path: ../artifact/${{ needs.build.outputs.jar_name }}
         run: |
           terraform init
-          terraform workspace select -or-create dev
           terraform plan
 
