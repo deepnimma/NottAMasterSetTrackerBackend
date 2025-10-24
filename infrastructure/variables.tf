@@ -12,10 +12,10 @@ variable "cloudflare_r2_token" {
 
 variable "cloudflare_zone_id" {
   description = "Cloudflare Zone Id"
-  type = string
+  type        = string
 }
 
 variable "cloudflare_account_id" {
   description = "Cloudflare Account's ID"
-  type = string
+  type        = string
 }
