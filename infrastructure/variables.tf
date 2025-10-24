@@ -4,19 +4,6 @@ variable "cloudflare_api_token" {
   sensitive   = true
 }
 
-variable "cloudflare_r2_token" {
-  description = "The read-only API token for cloudflare r2 bucket"
-  type        = string
-  sensitive   = true
-  default = "abc"
-}
-
-variable "cloudflare_zone_id" {
-  description = "Cloudflare Zone Id"
-  type        = string
-  default = "def"
-}
-
 variable "cloudflare_account_id" {
   description = "Cloudflare Account's ID"
   type        = string
