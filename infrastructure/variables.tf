@@ -27,3 +27,9 @@ variable "cloudflare_d1_database_name" {
   type        = string
   default     = "imega-metadata-table"
 }
+
+variable "java_jar_path" {
+  description = "path to the java jar"
+  type = string
+  default = "./"
+}
