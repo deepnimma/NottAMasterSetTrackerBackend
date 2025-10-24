@@ -5,7 +5,7 @@ variable "cloudflare_api_token" {
 }
 
 variable "cloudflare_r2_token" {
-  description = "The read-only token for cloudflare r2 bucket"
+  description = "The read-only API token for cloudflare r2 bucket"
   type        = string
   sensitive   = true
 }

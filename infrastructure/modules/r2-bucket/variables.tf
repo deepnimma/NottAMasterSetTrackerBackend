@@ -5,4 +5,5 @@ variable "bucket_name" {
 
 variable "cloudflare_account_id" {
   description = "Your cloudflare account id"
+  type        = string
 }
