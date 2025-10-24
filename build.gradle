@@ -48,14 +48,10 @@ repositories {
 
 dependencies {
     def lombokVersion = "1.18.42"
-    def graalVmVersion = "0.11.1"
 
     // Lombok
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
-
-    // GraalVM
-
 
     // Testing
     testImplementation platform('org.junit:junit-bom:5.10.0')
