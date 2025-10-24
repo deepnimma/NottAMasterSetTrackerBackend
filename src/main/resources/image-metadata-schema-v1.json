@@ -26,7 +26,7 @@
       "items": {
         "type": "string"
       },
-      "minLength": 1
+      "minItems": 1
     },
     "trainerInfo": {
       "type": "object",
@@ -280,7 +280,7 @@
           "dark",
           "containsCameo"
         ],
-        "minLength": 1
+        "minItems": 1
       }
     },
     "required": [
