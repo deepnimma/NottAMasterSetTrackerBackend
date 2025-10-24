@@ -2,7 +2,7 @@ name: build-and-deploy
 on:
   push:
     branches:
-      - *
+      - '**'
     tags:
       - 'v*.*.*'
 
@@ -53,6 +53,7 @@ jobs:
   deploy-dev:
     name: Deploy to Development
     needs: build
+    if: startsWith(github.ref, 'refs/heads/') # Runs only for branch pushes and not for tags
     runs-on: ubuntu-22.04
 
     environment:
