@@ -1,0 +1,85 @@
+name: build-and-deploy
+on:
+  push:
+    branches:
+      - *
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  # BUILD
+  build:
+    name: Build Java Artifact
+    runs-on: ubuntu-22.04 # Fixed for now.
+
+    outputs:
+      jar_name: ${{ steps.get_jar_name.outputs.name }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build Java Package
+        run: ./gradlew nativeBuild
+
+      - name: Find JAR file name
+        id: get_jar_name
+        run: |
+          JAR_FILE=$(find build/libs -maxdepth 1 -type f -name "*.jar" ! -name "*-sources.jar" ! -name "*-javadoc.jar" | head -n 1)
+          if [ -z "$JAR_FILE" ]; then
+            echo "Error: No .jar file found in builds/libs/"
+            exit 1
+          fi
+          echo "Found JAR: $(basename $JAR_FILE)"
+          echo "name=$(basename $JAR_FILE)" >> $GITHUB_OUTPUT
+
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-worker-jar
+          path: build/libs/${{ steps.get_jar_name.outputs.name }}
+
+  # Deploy to Development
+  deploy-dev:
+    name: Deploy to Development
+    needs: build
+    runs-on: ubuntu-22.04
+
+    environment:
+      name: Development
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: java-worker-jar
+          path: ./artifact # Download to ./artifact
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Run Terraform Plan
+        working-directory: ./infrastructure
+        env:
+          cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # This passes the JAR file path to Terraform as an input variable
+          TF_VAR_java_jar_path: ../artifact/${{ needs.build.outputs.jar_name }}
+        run: |
+          terraform init
+          terraform workspace select dev
+          terraform plan
+
