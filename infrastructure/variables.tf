@@ -19,3 +19,9 @@ variable "cloudflare_account_id" {
   description = "Cloudflare Account's ID"
   type        = string
 }
+
+variable "cloudflare_d1_database_name" {
+  description = "Cloudflare D1 Database Name"
+  type        = string
+  default     = "imega-metadata-table"
+}
