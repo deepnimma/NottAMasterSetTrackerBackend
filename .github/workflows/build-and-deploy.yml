@@ -80,7 +80,8 @@ jobs:
           # This passes the JAR file path to Terraform as an input variable
           TF_VAR_java_jar_path: ../artifact/${{ needs.build.outputs.jar_name }}
         run: |
-          echo "Account Id: $cloudflare_account_id"
+          
+          echo "${{ env.CLOUDFLARE_ACCOUNT_ID }}"
           terraform init
           terraform plan
 
