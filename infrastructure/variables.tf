@@ -9,14 +9,20 @@ variable "cloudflare_account_id" {
   type        = string
 }
 
-variable "cloudflare_d1_database_name" {
-  description = "Cloudflare D1 Database Name"
-  type        = string
-  default     = "imega-metadata-table"
-}
-
 variable "java_jar_path" {
   description = "path to the java jar"
   type = string
   default = "./"
+}
+
+variable "cloudflare_d1_database_name" {
+  description = "The Cloudflare Database Name"
+  type = string
+  default = "image-metadata-table"
+}
+
+variable "cloudflare_r2_bucket_name" {
+  description = "The Cloudflare Image Bucket Name"
+  type = string
+  default = "tcg-image-bucket"
 }
