@@ -10,7 +10,7 @@ jobs:
   # BUILD
   build:
     name: Build Java Artifact
-    runs-on: ubuntu-22.04 # Fixed for now.
+    runs-on: ubuntu-latest # Fixed for now.
 
     outputs:
       jar_name: ${{ steps.get_jar_name.outputs.name }}
@@ -54,7 +54,7 @@ jobs:
     name: Deploy to Development
     needs: build
     if: startsWith(github.ref, 'refs/heads/') # Runs only for branch pushes and not for tags
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     environment:
       name: Development
@@ -84,4 +84,37 @@ jobs:
           terraform init
           terraform workspace select -or-create development
           terraform plan 
+          terraform apply -auto-approve
+
+  deploy-prod:
+    name: Deploy to Production
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    environment:
+      name: prod
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: java-worker-jar
+          path: ./artifact
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Run Terraform Apply
+        working-directory: ./terraform
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_VAR_cloudflare_account_id: ${{ vars.CLOUDFLAREA_ACCOUNT_ID }}
+          TF_VAR_java_jar_path: ../artifact/${{ needs.build.outputs.jar_name }}
+        run: |
+          terraform init
+          terraform plan
           terraform apply -auto-approve
